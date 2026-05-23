@@ -258,14 +258,14 @@ function App() {
             <button
               onClick={() => scrape('google')}
               disabled={loading}
-              className="action-card py-4 md:py-6 px-2 md:px-4"
+              className="antigrav-card py-4 md:py-6 px-2 md:px-4"
             >
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">🗺️</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">Google</h3>
               <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">
                 Restaurante Maps
               </p>
-              <div className="btn-primary text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
+              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
                 Scrape
               </div>
             </button>
@@ -273,14 +273,14 @@ function App() {
             <button
               onClick={() => scrape('tiktok')}
               disabled={loading}
-              className="action-card py-4 md:py-6 px-2 md:px-4"
+              className="antigrav-card py-4 md:py-6 px-2 md:px-4"
             >
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">🎵</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">TikTok</h3>
               <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">
                 Creatori content
               </p>
-              <div className="btn-primary text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
+              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
                 Scrape
               </div>
             </button>
@@ -288,14 +288,14 @@ function App() {
             <button
               onClick={() => scrape('instagram')}
               disabled={loading}
-              className="action-card py-4 md:py-6 px-2 md:px-4"
+              className="antigrav-card py-4 md:py-6 px-2 md:px-4"
             >
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">📸</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">Instagram</h3>
               <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">
                 Profile business
               </p>
-              <div className="btn-primary text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
+              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
                 Scrape
               </div>
             </button>
@@ -303,14 +303,14 @@ function App() {
             <button
               onClick={() => sendSMS()}
               disabled={loading}
-              className="action-card py-4 md:py-6 px-2 md:px-4"
+              className="antigrav-card py-4 md:py-6 px-2 md:px-4"
             >
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">📱</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">SMS</h3>
               <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">
                 Bulk către pending
               </p>
-              <div className="btn-primary text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
+              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
                 Trimite
               </div>
             </button>
@@ -569,7 +569,7 @@ function App() {
               </p>
               <button
                 onClick={() => scrape('google')}
-                className="btn-primary text-xs md:text-sm py-2 md:py-3 px-4 md:px-6"
+                className="btn-sms text-xs md:text-sm py-2 md:py-3 px-4 md:px-6"
               >
                 🗺️ Scrape Google
               </button>
@@ -582,7 +582,12 @@ function App() {
       <footer className="border-t border-white/10 mt-10 md:mt-16 py-4 md:py-6">
         <div className="container mx-auto px-3 text-center">
           <p className="text-[9px] md:text-xs text-slate-400">
-            Nemo Lab © 2026 · AI for HoReCa
+            <p className="text-[10px] md:text-xs text-slate-500">
+              MrDelivery Lab © 2026 · AI for HoReCa
+            </p>
+            <p className="text-[9px] md:text-[10px] text-slate-400 mt-1">
+              Powered by MrDelivery AI Agency · part of SSocietyHUB.eu
+            </p>
           </p>
         </div>
       </footer>
