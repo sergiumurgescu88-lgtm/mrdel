@@ -9,7 +9,11 @@ const APIFY_TOKENS = [
   process.env.APIFY_FALLBACK_1 || '',
   process.env.APIFY_FALLBACK_2 || '',
   process.env.APIFY_FALLBACK_3 || '',
-  process.env.APIFY_FALLBACK_4 || ''
+  process.env.APIFY_FALLBACK_4 || '',
+  process.env.APIFY_FALLBACK_6 || '',
+  process.env.APIFY_FALLBACK_7 || '',
+  process.env.APIFY_FALLBACK_8 || '',
+  process.env.APIFY_FALLBACK_9 || ''
 ].filter(Boolean);
 
 async function runActorWithFallback(actorId, input) {
@@ -17,7 +21,7 @@ async function runActorWithFallback(actorId, input) {
     try {
       console.log(`🔄 Încerc token ${i+1}/${APIFY_TOKENS.length} pentru ${actorId}...`);
       const client = new ApifyClient({ token: APIFY_TOKENS[i] });
-      const run = await client.actor(actorId).call(input, { waitSecs: 300 });
+      const run = await client.actor(actorId).call(input, { waitSecs: 900 });
       const dataset = client.dataset(run.defaultDatasetId);
       const { items } = await dataset.listItems();
       console.log(`✅ Succes cu token ${i+1}!`);
@@ -34,41 +38,19 @@ async function scrapeGoogleMaps() {
   console.log('🗺️ Pornesc Google Maps Scraper (MEGA - 50+ căutări diverse)...');
   const input = {
     searchStringsArray: [
-      // RESTAURANTE - Toate orașele mari
-      'restaurante București', 'restaurante Cluj-Napoca', 'restaurante Timișoara',
-      'restaurante Iași', 'restaurante Constanța', 'restaurante Brașov',
-      'restaurante Sibiu', 'restaurante Oradea', 'restaurante Craiova',
-      'restaurante Galați', 'restaurante Ploiești', 'restaurante Arad',
-      'restaurante Pitești', 'restaurante Târgu Mureș', 'restaurante Baia Mare',
+      // RESTAURANTE DELIVERY BUCUREȘTI (cu "România" pentru localizare)
+      'restaurant livrare București România',
+      'pizza delivery București România',
+      'shaorma livrare București România',
+      'burger livrare București România',
+      'sushi livrare București România',
       
-      // TIPURI DIVERSE DE RESTAURANTE
-      'pizzerie București', 'pizzerie Cluj', 'pizzerie Timișoara',
-      'restaurant italian București', 'restaurant chinezesc Cluj',
-      'restaurant libanez Constanța', 'restaurant mexican Brașov',
-      'shaormerie București', 'shaormerie Cluj', 'shaormerie Timișoara',
-      'burger București', 'burger Cluj', 'burger Iași',
-      
-      // CAFENELE ȘI BARURI
-      'cafenele București', 'cafenele Cluj', 'cafenele Timișoara',
-      'cafenele Iași', 'cafenele Constanța', 'cafenele Brașov',
-      'coffee shop București', 'coffee shop Cluj',
-      'baruri București', 'baruri Cluj', 'baruri Timișoara',
-      'pub-uri București', 'pub-uri Cluj', 'pub-uri Brașov',
-      
-      // HOTELURI ȘI PENSIUNI
-      'hoteluri București', 'hoteluri Cluj', 'hoteluri Brașov',
-      'pensiuni Brașov', 'pensiuni Sibiu', 'pensiuni Bucovina',
-      
-      // FAST FOOD ȘI DELIVERY
-      'fast food București', 'fast food Cluj', 'fast food Timișoara',
-      'catering București', 'catering Cluj',
-      
-      // BRUNCH ȘI SPECIALITĂȚI
-      'brunch București', 'brunch Cluj', 'brunch Timișoara',
-      'steakhouse București', 'steakhouse Cluj',
-      'restaurant pescăresc Constanța', 'restaurant tradițional Sibiu'
+      // DARK KITCHENS (foarte specifici pentru România)
+      'dark kitchen București România',
+      'ghost kitchen Cluj România',
+      'cloud kitchen Timișoara România'
     ],
-    maxCrawledPlacesPerSearch: 20,
+    maxCrawledPlacesPerSearch: 4, // CONSERVATOR: 9 căutări × 4 = 36 total
     maxImages: 0,
     language: 'ro',
     oneGeo: true,
@@ -249,3 +231,11 @@ async function main() {
 }
 
 main();
+
+// === EXPORTS pentru API ===
+module.exports = {
+  scrapeGoogleMaps,
+  scrapeTikTok,
+  scrapeInstagram,
+  runActorWithFallback
+};
