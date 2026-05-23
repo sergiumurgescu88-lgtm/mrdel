@@ -1,0 +1,12 @@
+# === APIFY ===
+APIFY_TOKEN=apify_api_kZkJX7bksH4ZOPLH55F6RJGLUUumNO1ZjS1H
+
+# === SMSO.ro ===
+SMSO_API_KEY=vgLtqXsFNjeFPlvRWvYUGo4YPBBHgnjTk7Yp2i5v
+SMSO_SENDER_ID=4
+
+# === KIMI (opțional, pentru viitor) ===
+KIMI_API_KEY=sk-8CgLEIwhcZONBj9cZW9dwbxRJYbpaOb7XqidZg0m5u4xu4X6
+KIMI_BASE_URL=https://api.moonshot.cn/v1
+
+KIE_API_KEY=c46fefd1e2aeecdd84ac7a7111ac33ec
