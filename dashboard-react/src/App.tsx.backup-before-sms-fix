@@ -275,7 +275,7 @@ function App() {
             <button
               onClick={() => scrape('google')}
               disabled={loading}
-              className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
+              className="antigrav-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
             >
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">🗺️</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">Google</h3>
@@ -290,7 +290,7 @@ function App() {
             <button
               onClick={() => scrape('tiktok')}
               disabled={loading}
-              className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
+              className="antigrav-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
             >
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">🎵</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">TikTok</h3>
@@ -305,7 +305,7 @@ function App() {
             <button
               onClick={() => scrape('instagram')}
               disabled={loading}
-              className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
+              className="antigrav-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
             >
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">📸</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">Instagram</h3>
@@ -320,7 +320,7 @@ function App() {
             <button
               onClick={() => sendSMS()}
               disabled={loading}
-              className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
+              className="antigrav-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
             >
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">📱</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">SMS</h3>
@@ -535,7 +535,7 @@ function App() {
                   {lead.status === 'pending' && (
                     <button
                       onClick={() => sendSMS(lead.id)}
-                      className="border-2 border-green-500 bg-green-600/20 text-green-400 hover:bg-green-600/40 hover:border-green-400 active:bg-green-700 active:border-green-300 transition-all duration-200 text-[10px] md:text-xs py-1.5 md:py-2 px-2.5 md:px-3 rounded-lg font-medium"
+                      className="btn-secondary text-[10px] md:text-xs py-1.5 md:py-2 px-2.5 md:px-3"
                     >
                       📤 SMS
                     </button>

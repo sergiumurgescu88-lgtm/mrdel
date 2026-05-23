@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3003;
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/sms', require('./routes/sms'));
 
 // === CONFIGURARE API KEYS ===
 const KIMI_API_KEY = process.env.KIMI_API_KEY;
@@ -120,22 +121,25 @@ const { exec } = require('child_process');
 
 app.post('/api/scrape-google', (req, res) => {
   console.log('🗺️ Pornim Google Maps Scraper din Dashboard...');
-  exec('node scripts/scraper.js google', { cwd: path.join(__dirname, '..') }, (error, stdout, stderr) => {
-    res.json({ success: true, message: 'Google Maps Scraper executat!', output: stdout.slice(-500) });
+  exec('node scripts/scraper.js google', { cwd: path.join(__dirname, '..'), timeout: 900000, maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
+    if (error) { console.error('❌ Scraping error:', error.message, stderr); res.status(500).json({ success: false, error: error.message, output: stderr }); }
+    else { console.log('✅ Scraping stdout:', stdout.slice(-200)); res.json({ success: true, message: 'Google Maps Scraper executat!', output: stdout.slice(-500) }); }
   });
 });
 
 app.post('/api/scrape-tiktok', (req, res) => {
   console.log('🎵 Pornim TikTok Scraper din Dashboard...');
-  exec('node scripts/scraper.js tiktok', { cwd: path.join(__dirname, '..') }, (error, stdout, stderr) => {
-    res.json({ success: true, message: 'TikTok Scraper executat!', output: stdout.slice(-500) });
+  exec('node scripts/scraper.js tiktok', { cwd: path.join(__dirname, '..'), timeout: 900000, maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
+    if (error) { console.error('❌ Scraping error:', error.message, stderr); res.status(500).json({ success: false, error: error.message, output: stderr }); }
+    else { console.log('✅ Scraping stdout:', stdout.slice(-200)); res.json({ success: true, message: 'TikTok Scraper executat!', output: stdout.slice(-500) }); }
   });
 });
 
 app.post('/api/scrape-instagram', (req, res) => {
   console.log('📸 Pornim Instagram Scraper din Dashboard...');
-  exec('node scripts/scraper.js instagram', { cwd: path.join(__dirname, '..') }, (error, stdout, stderr) => {
-    res.json({ success: true, message: 'Instagram Scraper executat!', output: stdout.slice(-500) });
+  exec('node scripts/scraper.js instagram', { cwd: path.join(__dirname, '..'), timeout: 900000, maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
+    if (error) { console.error('❌ Scraping error:', error.message, stderr); res.status(500).json({ success: false, error: error.message, output: stderr }); }
+    else { console.log('✅ Scraping stdout:', stdout.slice(-200)); res.json({ success: true, message: 'Instagram Scraper executat!', output: stdout.slice(-500) }); }
   });
 });
 

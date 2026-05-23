@@ -87,7 +87,24 @@ body {
   overflow: hidden;
 }
 
-
+.led-card::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 1.15rem;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    #f97316 10%,
+    #fbbf24 15%,
+    transparent 30%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: -1;
+  animation: led-spin 3s linear infinite;
+}
 
 .led-card:hover {
   transform: translateY(-8px) scale(1.02);
@@ -282,9 +299,47 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+.led-card::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 1.2rem;
+  background: conic-gradient(
+    from 0deg,
+    rgba(251, 191, 36, 0) 0%,
+    rgba(251, 191, 36, 0.4) 8%,
+    rgba(249, 115, 22, 1) 15%,
+    rgba(251, 191, 36, 0.4) 22%,
+    rgba(251, 191, 36, 0) 30%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: -1;
+  animation: led-spin 3s linear infinite;
+  filter: blur(4px);
+}
 
-
-
+.led-card::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 1.4rem;
+  background: conic-gradient(
+    from 0deg,
+    rgba(249, 115, 22, 0) 0%,
+    rgba(251, 191, 36, 0.5) 10%,
+    rgba(249, 115, 22, 0.8) 15%,
+    rgba(251, 191, 36, 0.5) 20%,
+    rgba(249, 115, 22, 0) 30%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: -2;
+  animation: led-spin 3s linear infinite;
+  filter: blur(12px);
+}
 
 .led-card:hover {
   transform: translateY(-8px);
@@ -511,93 +566,4 @@ body {
   border-color: rgba(251, 191, 36, 0.8);
   box-shadow: 0 20px 40px rgba(249, 115, 22, 0.4), 0 0 60px rgba(251, 191, 36, 0.3);
   transform: translateY(-8px);
-}
-
-/* === BADGE-URI CU CHENAR VIZIBIL === */
-.badge-google {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(249, 115, 22, 0.15);
-  color: #fb923c;
-  border: 2px solid #f97316;
-  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
-  transition: all 0.3s ease;
-}
-
-.badge-google:hover {
-  background: rgba(249, 115, 22, 0.25);
-  border-color: #fbbf24;
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.5);
-  transform: translateY(-1px);
-}
-
-.badge-tiktok {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(236, 72, 153, 0.15);
-  color: #f472b6;
-  border: 2px solid #ec4899;
-  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
-  transition: all 0.3s ease;
-}
-
-.badge-tiktok:hover {
-  background: rgba(236, 72, 153, 0.25);
-  border-color: #f472b6;
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.5);
-  transform: translateY(-1px);
-}
-
-.badge-instagram {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 2px solid #a855f7;
-  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3);
-  transition: all 0.3s ease;
-}
-
-.badge-instagram:hover {
-  background: rgba(168, 85, 247, 0.25);
-  border-color: #c084fc;
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.5);
-  transform: translateY(-1px);
-}
-
-.badge-manual {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-  border: 2px solid #3b82f6;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-  transition: all 0.3s ease;
-}
-
-.badge-manual:hover {
-  background: rgba(59, 130, 246, 0.25);
-  border-color: #60a5fa;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
-  transform: translateY(-1px);
 }
