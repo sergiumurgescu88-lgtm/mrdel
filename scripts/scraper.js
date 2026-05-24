@@ -34,23 +34,43 @@ async function runActorWithFallback(actorId, input) {
 }
 
 // === GOOGLE MAPS ===
-async function scrapeGoogleMaps() {
-  console.log('🗺️ Pornesc Google Maps Scraper (MEGA - 50+ căutări diverse)...');
-  const input = {
-    searchStringsArray: [
-      // RESTAURANTE DELIVERY BUCUREȘTI (cu "România" pentru localizare)
+async function scrapeGoogleMaps(customSearches = null) {
+  // Citim flag-ul --custom din CLI
+  if (process.argv.includes("--custom") && !customSearches) {
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const tmpPath = path.join(__dirname, "..", "data", "tmp_searches.json");
+      if (fs.existsSync(tmpPath)) {
+        customSearches = JSON.parse(fs.readFileSync(tmpPath, "utf8"));
+        console.log(`📂 Căutări custom încărcate: ${customSearches.length} termeni`);
+      }
+    } catch (e) { console.error("❌ Eroare citire tmp_searches.json:", e.message); }
+  }
+  // Dacă primim căutări custom din popup, le folosim pe acelea
+  let searchStrings;
+  
+  if (customSearches && Array.isArray(customSearches) && customSearches.length > 0) {
+    searchStrings = customSearches;
+    console.log(`🗺️ Scraping personalizat: ${searchStrings.length} căutări specifice...`);
+  } else {
+    // Căutările implicite (fallback)
+    searchStrings = [
       'restaurant livrare București România',
       'pizza delivery București România',
       'shaorma livrare București România',
       'burger livrare București România',
       'sushi livrare București România',
-      
-      // DARK KITCHENS (foarte specifici pentru România)
       'dark kitchen București România',
       'ghost kitchen Cluj România',
       'cloud kitchen Timișoara România'
-    ],
-    maxCrawledPlacesPerSearch: 4, // CONSERVATOR: 9 căutări × 4 = 36 total
+    ];
+    console.log('🗺️ Pornesc Google Maps Scraper (căutări implicite)...');
+  }
+  
+  const input = {
+    searchStringsArray: searchStrings,
+    maxCrawledPlacesPerSearch: 20, // OPTIMIZAT conform Apify docs: 20 locații per search term
     maxImages: 0,
     language: 'ro',
     oneGeo: true,
@@ -78,10 +98,23 @@ async function scrapeGoogleMaps() {
     email: p.email || '',
     rating: p.totalScore || 0,
     reviews: p.reviewsCount || 0,
+    // Câmpuri extinse conform Apify docs
+    category: p.categoryName || '',
+    price: p.price || '',
+    openingHours: p.openingHours || [],
+    socialMedia: {
+      instagram: p.instagrams?.[0] || '',
+      facebook: p.facebooks?.[0] || '',
+      tiktok: p.tiktoks?.[0] || ''
+    },
+    temporarilyClosed: p.temporarilyClosed || false,
+    permanentlyClosed: p.permanentlyClosed || false,
+    placeId: p.placeId || '',
+    coordinates: p.location || null,
     source: 'Google Maps',
     scrapedAt: new Date().toISOString(),
     status: 'pending'
-  }));
+  })).filter(l => !l.temporarilyClosed && !l.permanentlyClosed);
 }
 
 // === TIKTOK ===

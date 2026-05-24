@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ScrapeModal from './components/ScrapeModal';
 
 interface Lead {
   id: string;
@@ -39,11 +40,83 @@ function App() {
   const [cityFilter, setCityFilter] = useState<string>('all');
   const [minRating, setMinRating] = useState<number>(0);
   const [minReviews, setMinReviews] = useState<number>(0);
+  const [showScrapeModal, setShowScrapeModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @ts-ignore
+  const [scrapePlatform, setScrapePlatform] = useState<string>('google');
 
   useEffect(() => {
     fetchData();
     const interval = setInterval(fetchData, 5000);
-    return () => clearInterval(interval);
+
+
+  // @ts-ignore - folosit de ScrapeModal prin prop onScrape
+  const handleCustomScrape = async (searches: string[]) => {
+    // 1. Setăm starea de loading
+    setLoading(true);
+    setScrapingPlatform(scrapePlatform);
+    setProgress(0);
+    
+    // 2. Bara de loading 3-5 minute (180-300 secunde) cu progres LINIAR
+    const totalDuration = 240000; // 4 minute medie
+    const stepInterval = 1000; // update la fiecare secundă
+    const maxAutoProgress = 95;
+    const startTime = Date.now();
+    
+    const progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const targetProgress = Math.min(maxAutoProgress, (elapsed / totalDuration) * maxAutoProgress);
+      setProgress((prev: number) => {
+        const next = Math.max(prev, targetProgress);
+        return next >= maxAutoProgress ? maxAutoProgress : next;
+      });
+    }, stepInterval);
+    
+    try {
+      // 3. Determinăm endpoint-ul în funcție de platformă
+      const endpoint = scrapePlatform === 'tiktok' 
+        ? '/api/scrape-tiktok' 
+        : scrapePlatform === 'instagram' 
+          ? '/api/scrape-instagram' 
+          : '/api/scrape-google';
+      
+      // 4. Trimitem request-ul cu search-urile custom
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ searches })
+      });
+      
+      const result = await response.json();
+      
+      // 5. Așteptăm ca scraping-ul să se termine (polling simplu)
+      // Scraping-ul real durează ~3-5 minute, așa că așteptăm progresul să ajungă la 95%
+      while (progress < 95) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+      
+      // 6. Finalizăm
+      clearInterval(progressInterval);
+      setProgress(100);
+      
+      setTimeout(() => {
+        alert(result.message || 'Scraping complet!');
+        setShowScrapeModal(false);
+        setScrapingPlatform(null);
+        setProgress(0);
+        setLoading(false);
+        fetchData(); // Reîmprospătăm lista de lead-uri
+      }, 500);
+      
+    } catch (error) {
+      clearInterval(progressInterval);
+      alert('Eroare la scraping: ' + (error as Error).message);
+      setLoading(false);
+      setScrapingPlatform(null);
+      setProgress(0);
+    }
+  };
+  return () => clearInterval(interval);
   }, []);
 
   const fetchData = async () => {
@@ -146,6 +219,53 @@ function App() {
       default: return 'badge-manual';
     }
   };
+
+
+  // @ts-ignore - folosit de ScrapeModal prin prop onScrape
+  const handleCustomScrape = async (searches: string[]) => {
+    setLoading(true);
+    setScrapingPlatform(scrapePlatform);
+    setProgress(0);
+    // Bara de loading 4-6 minute (240-360s), progres lent până la 95%
+    const totalDuration = 300000; // 5 minute medie
+    const stepInterval = 1000; // update la fiecare secundă
+    const maxAutoProgress = 95;
+    const startTime = Date.now();
+    const progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const targetProgress = Math.min(maxAutoProgress, (elapsed / totalDuration) * maxAutoProgress);
+      setProgress((prev: number) => {
+        // Progresul crește lin, nu scade niciodată
+        const next = Math.max(prev, targetProgress);
+        return next >= maxAutoProgress ? maxAutoProgress : next;
+      });
+    }, stepInterval);
+    try {
+      const endpoint = scrapePlatform === 'tiktok' ? '/api/scrape-tiktok' : scrapePlatform === 'instagram' ? '/api/scrape-instagram' : '/api/scrape-google';
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ searches })
+      });
+      clearInterval(progressInterval);
+      setProgress(100);
+      const result = await response.json();
+      setTimeout(() => {
+        alert(result.message || 'Scraping complet!');
+        setShowScrapeModal(false);
+        setScrapingPlatform(null);
+        setProgress(0);
+        fetchData();
+      }, 500);
+    } catch {
+      clearInterval(progressInterval);
+      alert('Eroare la scraping!');
+      setLoading(false);
+      setScrapingPlatform(null);
+      setProgress(0);
+    }
+  };
+
 
   return (
     <div className="relative min-h-screen z-10">
@@ -271,65 +391,24 @@ function App() {
             Scraping & SMS
           </p>
           
-          <div className="grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4">
-            <button
-              onClick={() => scrape('google')}
-              disabled={loading}
-              className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
-            >
+          <div className="grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-3">
+            <button onClick={() => { setScrapePlatform('google'); setShowScrapeModal(true); }} disabled={loading} className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4">
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">🗺️</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">Google</h3>
-              <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">
-                Restaurante Maps
-              </p>
-              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
-                Scrape
-              </div>
+              <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">Restaurante Maps</p>
+              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">Scrape</div>
             </button>
-
-            <button
-              onClick={() => scrape('tiktok')}
-              disabled={loading}
-              className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
-            >
+            <button onClick={() => { setScrapePlatform('tiktok'); setShowScrapeModal(true); }} disabled={loading} className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4">
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">🎵</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">TikTok</h3>
-              <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">
-                Creatori content
-              </p>
-              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
-                Scrape
-              </div>
+              <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">Creatori content</p>
+              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">Scrape</div>
             </button>
-
-            <button
-              onClick={() => scrape('instagram')}
-              disabled={loading}
-              className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
-            >
+            <button onClick={() => { setScrapePlatform('instagram'); setShowScrapeModal(true); }} disabled={loading} className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4">
               <div className="text-3xl md:text-5xl mb-2 md:mb-3">📸</div>
               <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">Instagram</h3>
-              <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">
-                Profile business
-              </p>
-              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
-                Scrape
-              </div>
-            </button>
-
-            <button
-              onClick={() => sendSMS()}
-              disabled={loading}
-              className="antigrav-card led-card border-2 border-orange-500/30 py-4 md:py-6 px-2 md:px-4"
-            >
-              <div className="text-3xl md:text-5xl mb-2 md:mb-3">📱</div>
-              <h3 className="text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2">SMS</h3>
-              <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">
-                Bulk către pending
-              </p>
-              <div className="btn-sms text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">
-                Trimite
-              </div>
+              <p className="text-[9px] md:text-xs text-slate-400 mb-2 md:mb-3 line-clamp-2 hidden md:block">Profile business</p>
+              <div className="btn-scraping text-[10px] md:text-xs text-center py-2 md:py-2.5 px-2 md:px-3">Scrape</div>
             </button>
           </div>
         </section>
@@ -608,7 +687,15 @@ function App() {
           </p>
         </div>
       </footer>
-    </div>
+    
+      <ScrapeModal
+        isOpen={showScrapeModal}
+        onClose={() => setShowScrapeModal(false)}
+        onScrape={handleCustomScrape}
+        isScraping={loading}
+        platform={scrapePlatform}
+      />
+</div>
   );
 }
 

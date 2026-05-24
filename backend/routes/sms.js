@@ -56,7 +56,8 @@ router.post('/send', async (req, res) => {
     }
 
     // Trimitem SMS
-    const result = await smsService.sendSMS(lead.phone, message);
+    const smsMessage = smsService.generateMessage(lead);
+    const result = await smsService.sendSMS(lead.phone, smsMessage);
 
     if (result.success) {
       // Actualizăm status-ul lead-ului
