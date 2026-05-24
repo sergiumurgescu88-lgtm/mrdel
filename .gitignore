@@ -1,7 +1,31 @@
+# Dependencies
 node_modules/
-dist/
+dashboard-react/node_modules/
+
+# Build output
+dashboard-react/dist/
+
+# SECRETS - NICIODATĂ pe GitHub
 .env
+.env.local
+.env.*.local
+
+# DATA files - prea mari/sensibile
+data/leads.json
+data/scrape_progress.json
+data/tmp_searches.json
+logs/
 *.log
-__pycache__/
-backups/
-.env
+
+# Backup files
+*.BROKEN*
+*.backup
+*.bak
+
+# System files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
